@@ -2,6 +2,8 @@
 library(dplyr)
 library(ggplot2)
 library(corrplot)
+library(DMwR)
+library(DMwR2)
 
 #read dataset (csv)
 studentDropoutData <- read.csv("student dropout_kaggle.csv")
@@ -68,4 +70,13 @@ cor_matrix <- cor(data %>% select_if(is.numeric))
 corrplot(cor_matrix, method = 'color')
 # Creates a heatmap to show the strength of relationships between variables
 
+# Save the dataset to a CSV file for correlation tool processing online
+write.csv(data, "correlation_student_data.csv", row.names = FALSE)
 
+# Check the distribution of the "Dropped_Out" target variable
+table(data$Dropped_Out)
+# Displays the counts for each class (e.g., 0 = didn't drop out, 1 = dropped out)
+
+# Use SMOTE to handle imbalance (if applicable)
+balanced_data <- SMOTE(Dropped_Out ~ ., data = data, perc.over = 100, perc.under = 200)
+# Oversamples the minority class (Dropped_Out = 1) to balance the dataset
